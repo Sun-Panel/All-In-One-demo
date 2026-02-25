@@ -29,8 +29,8 @@ export class WindowManagerWidget extends SunPanelWidgetElement {
       }
       
       const windowId = this.spCtx.api.window.open({
-        // componentName: 'window-demo-page',
-        componentName: 'data-node-test-page',
+        componentName: 'window-demo-page',
+        // componentName: 'data-node-test-page',
         title: '窗口演示页面',
         windowConfig: {
           width: 600,
@@ -84,7 +84,7 @@ export class WindowManagerWidget extends SunPanelWidgetElement {
     return html`
       <div class="container">
         <div class="header">
-          <span class="title">窗口管理小部件</span>
+          <span class="title">窗口管理演示</span>
           <button class="info-btn" @click=${this._showInfo}>说明</button>
         </div>
         <div class="form-section">

@@ -47,7 +47,8 @@ export class WindowDemoPage extends SunPanelPageElement {
           <h3>接收到的参数</h3>
           <div class="param-section">
             <div class="param-label">widgetInfo:</div>
-            <pre class="param-value">${JSON.stringify(this._widgetInfo, null, 2)}</pre>
+            <!-- <pre class="param-value">${JSON.stringify(this._widgetInfo, null, 2)}</pre> -->
+            <div>此参数仅当窗口作为小部件的配置组件打开并且为系统调用（创建小部件时触发的打开引导页、右键小部件菜单中打开配置页面）时才能获取到。其他主动触发行为请使用 customPatam 参数自行传递。</div>
           </div>
           <div class="param-section">
             <div class="param-label">customParam:</div>
@@ -74,10 +75,6 @@ export class WindowDemoPage extends SunPanelPageElement {
             `)}
           </div>
         </div>
-        
-        <button class="close-btn" @click=${this._closeWindow}>
-          关闭窗口
-        </button>
       </div>
     `;
   }
