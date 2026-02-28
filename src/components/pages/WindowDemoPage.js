@@ -60,7 +60,6 @@ export class WindowDemoPage extends SunPanelPageElement {
           <h3>window API 测试</h3>
           <ul>
             <li><code>window.open()</code> - 已在父窗口调用</li>
-            <li><code>window.close()</code> - 点击下方按钮关闭</li>
           </ul>
         </div>
         

@@ -29,7 +29,11 @@ export default {
       component: CounterWidgetConfigPage,
       background: '#ffffff',
       headerTextColor: 'black',
-      type: 'config'
+      type: 'config',
+      resize: true,
+      move: true,
+      background: '#ffffff',
+      showMask: false,
     },
     // 窗口演示页面
     'window-demo-page': {

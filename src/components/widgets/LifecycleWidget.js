@@ -284,6 +284,7 @@ export class LifecycleWidget extends SunPanelWidgetElement {
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      background: white;
     }
     
     .header {

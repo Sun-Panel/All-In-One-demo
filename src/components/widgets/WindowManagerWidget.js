@@ -10,7 +10,8 @@ export class WindowManagerWidget extends SunPanelWidgetElement {
     _windowId: { state: true },
     _customParam: { state: true },
     _message: { state: true },
-    _showingInfo: { state: true }
+    _showingInfo: { state: true },
+    _windowConfig: { state: true }
   };
 
   constructor() {
@@ -19,6 +20,15 @@ export class WindowManagerWidget extends SunPanelWidgetElement {
     this._customParam = '{"testData": "hello"}';
     this._message = '';
     this._showingInfo = false;
+    this._windowConfig = {
+      width: 800,
+      height: 600,
+      background: '#ffffff',
+      headerTextColor: '#333333',
+      showFullscreenBtn: false,
+      resize: true,
+      move: true
+    };
   }
 
   async _openWindow() {
@@ -30,17 +40,21 @@ export class WindowManagerWidget extends SunPanelWidgetElement {
       
       const windowId = this.spCtx.api.window.open({
         componentName: 'window-demo-page',
-        // componentName: 'data-node-test-page',
         title: '窗口演示页面',
+        // 窗口配置，可以不填，不填将使用默认配置
         windowConfig: {
-          width: 600,
-          height: 400,
-          isFullScreen: false,
-          background: '#ffffff'
+          width: this._windowConfig.width,
+          height: this._windowConfig.height,
+          background: this._windowConfig.background,
+          headerTextColor: this._windowConfig.headerTextColor,
+          showFullscreenBtn: this._windowConfig.showFullscreenBtn,
+          resize: this._windowConfig.resize,
+          move: this._windowConfig.move,
+          showMask: false,
         },
         customParam
       });
-      
+
       this._windowId = windowId;
       this._showMessage(`窗口已打开: ${windowId}`);
     } catch (e) {
@@ -87,6 +101,56 @@ export class WindowManagerWidget extends SunPanelWidgetElement {
           <span class="title">窗口管理演示</span>
           <button class="info-btn" @click=${this._showInfo}>说明</button>
         </div>
+        
+        <div class="config-section">
+          <div class="section-title">窗口配置</div>
+          <div class="config-row">
+            <div class="config-item">
+              <label>宽度</label>
+              <input type="number" .value=${String(this._windowConfig.width)}
+                @input=${(e) => this._windowConfig = {...this._windowConfig, width: parseInt(e.target.value) || 800}}>
+            </div>
+            <div class="config-item">
+              <label>高度</label>
+              <input type="number" .value=${String(this._windowConfig.height)}
+                @input=${(e) => this._windowConfig = {...this._windowConfig, height: parseInt(e.target.value) || 600}}>
+            </div>
+            <div class="config-item">
+              <label>背景颜色</label>
+              <input type="color" .value=${this._windowConfig.background}
+                @input=${(e) => this._windowConfig = {...this._windowConfig, background: e.target.value}}>
+            </div>
+            <div class="config-item">
+              <label>标题文字颜色</label>
+              <input type="color" .value=${this._windowConfig.headerTextColor}
+                @input=${(e) => this._windowConfig = {...this._windowConfig, headerTextColor: e.target.value}}>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-item checkbox">
+              <label>
+                <input type="checkbox" ?checked=${this._windowConfig.showFullscreenBtn}
+                  @change=${(e) => this._windowConfig = {...this._windowConfig, showFullscreenBtn: e.target.checked}}>
+                显示全屏按钮
+              </label>
+            </div>
+            <div class="config-item checkbox">
+              <label>
+                <input type="checkbox" ?checked=${this._windowConfig.resize}
+                  @change=${(e) => this._windowConfig = {...this._windowConfig, resize: e.target.checked}}>
+                可调整大小
+              </label>
+            </div>
+            <div class="config-item checkbox">
+              <label>
+                <input type="checkbox" ?checked=${this._windowConfig.move}
+                  @change=${(e) => this._windowConfig = {...this._windowConfig, move: e.target.checked}}>
+                可移动
+              </label>
+            </div>
+          </div>
+        </div>
+        
         <div class="form-section">
           <label>自定义参数 (JSON)</label>
           <textarea .value=${this._customParam}
@@ -108,28 +172,6 @@ export class WindowManagerWidget extends SunPanelWidgetElement {
             <span class="label">当前窗口ID:</span>
             <span class="value mono">${this._windowId || '-'}</span>
           </div>
-        </div>
-        
-        <div class="form-section">
-          <label>自定义参数 (JSON)</label>
-          <textarea .value=${this._customParam}
-            @input=${(e) => this._customParam = e.target.value}></textarea>
-          
-          <div class="btn-group">
-            <button class="btn primary" @click=${this._openWindow}>
-              打开窗口
-            </button>
-          </div>
-        </div>
-        
-        <div class="options-info">
-          <div class="section-title">OpenWindowOptions 参数:</div>
-          <ul>
-            <li><code>componentName</code> - 组件名称</li>
-            <li><code>title</code> - 窗口标题</li>
-            <li><code>windowConfig</code> - 窗口配置</li>
-            <li><code>customParam</code> - 自定义参数</li>
-          </ul>
         </div>
         
         ${this._message ? html`<div class="message ${this._message.isError ? 'error' : ''}">${this._message.text}</div>` : ''}
@@ -155,7 +197,6 @@ export class WindowManagerWidget extends SunPanelWidgetElement {
             <li style="padding-left: 20px;">- customParam 自定义参数传递</li>
             <li style="padding-left: 20px;">- title 窗口标题</li>
             <li>测试页面组件 onInitialized() 接收参数</li>
-            <li>测试 window.close() 关闭窗口</li>
           </ul>
         </div>
       </div>
@@ -164,28 +205,29 @@ export class WindowManagerWidget extends SunPanelWidgetElement {
 
   static styles = css`
     .container {
-      padding: 12px;
+      padding: 8px;
       height: 100%;
       box-sizing: border-box;
       position: relative;
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
     
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
     
-    .title { font-size: 14px; font-weight: 600; color: #333; }
+    .title { font-size: 13px; font-weight: 600; color: #333; }
     
     .info-btn {
       background: rgba(0,0,0,0.1);
       border: none;
       border-radius: 4px;
-      padding: 2px 8px;
-      font-size: 12px;
+      padding: 1px 6px;
+      font-size: 11px;
       cursor: pointer;
       color: #666;
     }
@@ -193,40 +235,105 @@ export class WindowManagerWidget extends SunPanelWidgetElement {
     .info-section {
       background: rgba(0,0,0,0.05);
       border-radius: 4px;
-      padding: 8px;
-      margin-bottom: 12px;
+      padding: 6px;
+      margin-bottom: 8px;
     }
     
     .info-row {
       display: flex;
       justify-content: space-between;
-      padding: 4px 0;
-      font-size: 12px;
+      padding: 2px 0;
+      font-size: 11px;
     }
     
     .label { color: #666; }
     .value { color: #333; font-weight: 500; }
     .value.mono { font-family: monospace; font-size: 10px; }
     
-    .form-section { margin-bottom: 12px; }
+    .form-section { margin-bottom: 8px; }
     
     .form-section label {
       display: block;
-      font-size: 12px;
+      font-size: 11px;
       color: #666;
+      margin-bottom: 4px;
+    }
+    
+    .config-section {
+      background: rgba(0,0,0,0.05);
+      border-radius: 4px;
+      padding: 6px;
+      margin-bottom: 8px;
+    }
+    
+    .config-row {
+      display: flex;
+      gap: 6px;
       margin-bottom: 6px;
+    }
+    
+    .config-row:last-child {
+      margin-bottom: 0;
+    }
+    
+    .config-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .config-item.checkbox {
+      flex-direction: row;
+      align-items: center;
+    }
+    
+    .config-item label {
+      font-size: 10px;
+      color: #666;
+      margin-bottom: 2px;
+    }
+    
+    .config-item.checkbox label {
+      margin-bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+    }
+    
+    .config-item input[type="number"] {
+      width: 100%;
+      padding: 3px 4px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      font-size: 11px;
+      box-sizing: border-box;
+    }
+    
+    .config-item input[type="color"] {
+      width: 100%;
+      height: 24px;
+      padding: 1px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      box-sizing: border-box;
+    }
+    
+    .config-item input[type="checkbox"] {
+      width: 12px;
+      height: 12px;
     }
     
     textarea {
       width: 100%;
-      padding: 8px;
+      padding: 6px;
       border: 1px solid #ddd;
       border-radius: 4px;
-      font-size: 11px;
-      min-height: 60px;
+      font-size: 10px;
+      min-height: 50px;
       resize: vertical;
       box-sizing: border-box;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     
     .btn-group {
@@ -295,15 +402,15 @@ export class WindowManagerWidget extends SunPanelWidgetElement {
     }
     
     .message {
-      position: absolute;
-      bottom: 12px;
-      left: 12px;
-      right: 12px;
-      padding: 6px 12px;
+      position: fixed;
+      bottom: 8px;
+      left: 8px;
+      right: 8px;
+      padding: 4px 8px;
       background: #e6fffb;
       border: 1px solid #b5f5ec;
       border-radius: 4px;
-      font-size: 11px;
+      font-size: 10px;
       color: #13c2c2;
     }
     
@@ -321,45 +428,37 @@ export class WindowManagerWidget extends SunPanelWidgetElement {
       bottom: 0;
       background: rgba(255,255,255,0.98);
       z-index: 10;
-      padding: 12px;
+      padding: 8px;
+      overflow-y: auto;
     }
     
     .info-panel-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       font-weight: 600;
+      font-size: 12px;
     }
     
     .close-btn {
       background: none;
       border: none;
-      font-size: 18px;
+      font-size: 16px;
       cursor: pointer;
       color: #666;
     }
     
     .info-panel-content {
-      font-size: 12px;
-      line-height: 1.6;
+      font-size: 11px;
+      line-height: 1.5;
     }
     
     .info-panel-content ul {
-      margin: 8px 0;
-      padding-left: 20px;
+      margin: 6px 0;
+      padding-left: 16px;
     }
     
-    .info-panel-content li { margin: 4px 0; }
-    
-    :host([dark]) .title { color: #fff; }
-    :host([dark]) .value { color: #eee; }
-    :host([dark]) .label { color: #aaa; }
-    :host([dark]) .info-section { background: rgba(255,255,255,0.1); }
-    :host([dark]) .textarea { background: #333; border-color: #555; color: #fff; }
-    :host([dark]) .options-info { background: rgba(19,194,194,0.2); }
-    :host([dark]) .options-info code { background: rgba(255,255,255,0.1); }
-    :host([dark]) .info-btn { background: rgba(255,255,255,0.1); color: #ccc; }
-    :host([dark]) .info-panel { background: rgba(30,30,30,0.98); }
+    .info-panel-content li { margin: 3px 0; }
   `;
 }
