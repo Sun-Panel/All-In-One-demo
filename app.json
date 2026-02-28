@@ -1,25 +1,81 @@
 {
   "appJsonVersion": "1.0",
-  "microAppId": "hslr-hello-world-dev",
+  "microAppId": "sun-panel-all-in-one-demo",
   "version": "1.0.0",
-  "author": "hslr",
+  "author": "sun-panel",
   "entry": "main.js",
   "icon": "logo.png",
   "components": {
     "pages": {
-      "hello-world-config": {
-        "background": "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"
+      "counter-widget-config-page": {
+        "background": "#ffffff"
+      },
+      "window-demo-page": {
+        "background": "#ffffff"
+      },
+      "data-node-test-page": {
+        "background": "#ffffff"
+      },
+      "network-test-page": {
+        "background": "#ffffff"
+      },
+      "context-info-page": {
+        "background": "#ffffff"
       }
     },
     "widgets": {
-      "hello-world-widget": {
-        "configComponentName": "hello-world-config",
+      "context-info-widget": {
+        "configComponentName": null,
+        "size": [
+          "2x4"
+        ],
+        "background": "",
+        "isModifyBackground": false
+      },
+      "counter-widget": {
+        "configComponentName": "counter-widget-config-page",
         "size": [
           "1x1",
-          "1x2",
-          "1xfull",
-          "2x1",
-          "2x2",
+          "2x2"
+        ],
+        "background": "",
+        "isModifyBackground": false
+      },
+      "user-cache-widget": {
+        "configComponentName": null,
+        "size": [
+          "2x4"
+        ],
+        "background": "",
+        "isModifyBackground": false
+      },
+      "other-widget": {
+        "configComponentName": null,
+        "size": [
+          "2x4"
+        ],
+        "background": "white",
+        "isModifyBackground": false
+      },
+      "network-widget": {
+        "configComponentName": null,
+        "size": [
+          "2x4"
+        ],
+        "background": "",
+        "isModifyBackground": false
+      },
+      "window-manager-widget": {
+        "configComponentName": null,
+        "size": [
+          "2x4"
+        ],
+        "background": "white",
+        "isModifyBackground": false
+      },
+      "lifecycle-widget": {
+        "configComponentName": null,
+        "size": [
           "2x4"
         ],
         "background": "",
@@ -27,19 +83,51 @@
       }
     }
   },
-  "permissions": [],
-  "dataNodes": {},
-  "networkDomains": [],
+  "permissions": [
+    "network",
+    "dataNode",
+    "iframe"
+  ],
+  "dataNodes": {
+    "appConfig": {
+      "scope": "app",
+      "isPublic": true
+    },
+    "apiKey": {
+      "scope": "app",
+      "isPublic": false
+    },
+    "userSettings": {
+      "scope": "user",
+      "isPublic": true
+    },
+    "privateData": {
+      "scope": "user",
+      "isPublic": false
+    },
+    "networkConfig": {
+      "scope": "user",
+      "isPublic": false
+    },
+    "cookieStore": {
+      "scope": "user",
+      "isPublic": false
+    }
+  },
+  "networkDomains": [
+    "api.example.com",
+    "jsonplaceholder.typicode.com"
+  ],
   "appInfo": {
     "zh-CN": {
-      "appName": "Hello World",
-      "description": "Sun-Panel 演示微应用",
-      "networkDescription": "无需链接任何三方网站"
+      "appName": "AllInOne Demo",
+      "description": "包含所有微应用功能的演示应用",
+      "networkDescription": "用于测试网络请求功能"
     },
     "en-US": {
-      "appName": "Hello World",
-      "description": "Micro App Hello World",
-      "networkDescription": "For demonstration purposes"
+      "appName": "AllInOne Demo",
+      "description": "Demo app with all micro app features",
+      "networkDescription": "For testing network request functionality"
     }
   }
 }

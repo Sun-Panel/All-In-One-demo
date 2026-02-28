@@ -7,7 +7,6 @@
 import { ContextInfoWidget } from '../src/components/widgets/ContextInfoWidget.js';
 import { CounterWidget } from '../src/components/widgets/CounterWidget.js';
 import { UserCacheWidget } from '../src/components/widgets/UserCacheWidget.js';
-import { NetworkWidget } from '../src/components/widgets/NetworkWidget.js';
 import { WindowManagerWidget } from '../src/components/widgets/WindowManagerWidget.js';
 import { LifecycleWidget } from '../src/components/widgets/LifecycleWidget.js';
 import { OtherWidget } from '../src/components/widgets/OtherWidget.js';
@@ -17,6 +16,7 @@ import { CounterWidgetConfigPage } from '../src/components/pages/CounterWidgetCo
 import { WindowDemoPage } from '../src/components/pages/WindowDemoPage.js';
 import { DataNodeTestPage } from '../src/components/pages/DataNodeTestPage.js';
 import { NetworkTestPage } from '../src/components/pages/NetworkTestPage.js';
+import { ContextInfoPage } from '../src/components/pages/ContextInfoPage.js';
 
 
 export default {
@@ -35,6 +35,7 @@ export default {
       background: '#ffffff',
       showMask: false,
     },
+
     // 窗口演示页面
     'window-demo-page': {
       component: WindowDemoPage,
@@ -42,17 +43,32 @@ export default {
       headerTextColor: '#333333',
       type: 'main'
     },
+
+    // 数据节点测试页面
     "data-node-test-page": {
       component: DataNodeTestPage,
       background: '#ffffff',
       headerTextColor: '#333333',
       type: 'main'
     },
+
+    // 网络测试页面
     "network-test-page": {
       component: NetworkTestPage,
       background: '#ffffff',
-      headerTextColor: '#333333',
+      headerTextColor: '#333333', 
       type: 'main'
+    },
+
+    // 上下文信息页面
+    'context-info-page': {
+      component: ContextInfoPage,
+      background: '#ffffff',
+      headerTextColor: '#333333',
+      type: 'main',
+      resize: true,
+      move: true,
+      showMask: false
     }
   },
 
@@ -87,13 +103,6 @@ export default {
       component: OtherWidget,
       size: ['2x4'],
       background: 'white'
-    },
-
-    // 网络请求小部件
-    'network-widget': {
-      component: NetworkWidget,
-      size: ['2x4'],
-      background: ''
     },
 
     // 窗口管理小部件

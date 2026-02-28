@@ -52,6 +52,20 @@ export class ContextInfoWidget extends SunPanelWidgetElement {
     this.requestUpdate();
   }
 
+  _openWindow() {
+    this.spCtx.api.window.open({
+      componentName: 'context-info-page',
+      title: '上下文信息演示',
+      windowConfig: {
+        width: 650,
+        height: 550,
+        showMask: false,
+        resize: true,
+        move: true
+      }
+    });
+  }
+
   render() {
     const size = this.spCtx?.widgetInfo?.gridSize || '2x4';
     
@@ -63,7 +77,10 @@ export class ContextInfoWidget extends SunPanelWidgetElement {
       <div class="container" ?dark=${this.spCtx?.darkMode}>
         <div class="header">
           <span class="title">上下文信息演示</span>
-          <button class="info-btn" @click=${this._showInfo}>说明</button>
+          <div class="header-btns">
+            <button class="window-btn" @click=${this._openWindow} title="在窗口中打开">窗口上下文演示</button>
+            <button class="info-btn" @click=${this._showInfo}>说明</button>
+          </div>
         </div>
         <div class="content">
           <div class="info-grid">
@@ -125,8 +142,8 @@ export class ContextInfoWidget extends SunPanelWidgetElement {
   _getRoleName(role) {
     switch(role) {
       case 0: return '公开';
-      case 1: return '私有';
-      case 2: return '管理员';
+      case 1: return '管理';
+      case 2: return '普通';
       default: return '-';
     }
   }
@@ -148,6 +165,11 @@ export class ContextInfoWidget extends SunPanelWidgetElement {
       justify-content: space-between;
       align-items: center;
       margin-bottom: 12px;
+    }
+
+    .header-btns {
+      display: flex;
+      gap: 4px;
     }
 
     .content {
@@ -176,6 +198,20 @@ export class ContextInfoWidget extends SunPanelWidgetElement {
     
     .info-btn:hover {
       background: rgba(0,0,0,0.2);
+    }
+
+    .window-btn {
+      background: rgba(19,194,194,0.2);
+      border: none;
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 12px;
+      cursor: pointer;
+      color: #13c2c2;
+    }
+
+    .window-btn:hover {
+      background: rgba(19,194,194,0.3);
     }
     
     .info-grid {

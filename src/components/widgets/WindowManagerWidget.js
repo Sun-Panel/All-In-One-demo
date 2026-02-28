@@ -50,7 +50,7 @@ export class WindowManagerWidget extends SunPanelWidgetElement {
           showFullscreenBtn: this._windowConfig.showFullscreenBtn,
           resize: this._windowConfig.resize,
           move: this._windowConfig.move,
-          showMask: false,
+          // showMask: false,
         },
         customParam
       });
