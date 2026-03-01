@@ -11,6 +11,7 @@ export class NetworkTestPage extends SunPanelPageElement {
     _method: { state: true },
     _headers: { state: true },
     _body: { state: true },
+    _cookieDataNodeKey: { state: true },
     _response: { state: true },
     _loading: { state: true },
     _message: { state: true },
@@ -30,6 +31,7 @@ export class NetworkTestPage extends SunPanelPageElement {
     this._method = 'GET';
     this._headers = '';
     this._body = '';
+    this._cookieDataNodeKey = '';// userSettings.localhostCookie
     this._response = null;
     this._loading = false;
     this._message = '';
@@ -77,19 +79,21 @@ export class NetworkTestPage extends SunPanelPageElement {
       }
 
       const requestConfig = {
-        targetUrl: this._advancedUrl,
-        method: this._advancedMethod,
-        headers,
+        request: {
+          targetUrl: this._advancedUrl,
+          method: this._advancedMethod,
+          headers
+        },
         templateReplacements: [
           {
             placeholder: '{{apikey}}',
             fields: ['headers'],
-            dataNode: 'networkConfig.apikey'
+            dataNodeKey: 'networkConfig.apikey'
           },
           {
             placeholder: '{{apihost}}',
             fields: ['targetUrl'],
-            dataNode: 'networkConfig.apihost'
+            dataNodeKey: 'networkConfig.apihost'
           }
         ]
       };
@@ -125,14 +129,21 @@ export class NetworkTestPage extends SunPanelPageElement {
         try { headers = JSON.parse(this._headers); } catch (e) {}
       }
       
-      const options = {
+      const request = {
         targetUrl: this._url,
         method: this._method,
         headers
       };
       
       if (this._body && ['POST', 'PUT', 'PATCH'].includes(this._method)) {
-        options.body = this._body;
+        request.body = this._body;
+      }
+      
+      const options = { request };
+      
+      // 如果设置了 cookieDataNodeKey，则添加到请求配置中
+      if (this._cookieDataNodeKey) {
+        options.cookieDataNodeKey = this._cookieDataNodeKey;
       }
       
       const response = await this.spCtx.api.network.request(options);
@@ -207,6 +218,22 @@ export class NetworkTestPage extends SunPanelPageElement {
             ${this._loading ? '请求中...' : '发送请求'}
           </button>
         </div>
+        
+        <details class="cookie-config">
+          <summary>Cookie 自动管理（可选）</summary>
+          <div class="cookie-config-content">
+            <div class="form-row">
+              <label>数据节点键:</label>
+              <input type="text" placeholder="nodeName.key" .value=${this._cookieDataNodeKey}
+                @input=${(e) => this._cookieDataNodeKey = e.target.value}>
+            </div>
+            <div class="hint">
+              配置后自动保存目标站点的 Cookie，后续请求时填写该参数，会自动读取节点数据的cookie，并携带发起请求。命名建议【nodeName.请求域名+cookie后缀】：
+              <code>userSettings.exampleComCookie</code>。
+              <a href="https://doc.sun-panel.top/v2/zh_cn/micro_app_dev/api.html#cookie_manage" target="_blank">关于cookie的更多说明</a>
+            </div>
+          </div>
+        </details>
         
         ${this._response ? html`
           <div class="response ${this._response.success ? 'success' : 'error'}">
@@ -342,6 +369,62 @@ export class NetworkTestPage extends SunPanelPageElement {
     
     .form-section { margin-bottom: 12px; }
     
+    .cookie-config {
+      margin-bottom: 12px;
+      border: 1px solid #e8e8e8;
+      border-radius: 6px;
+      background: #fafafa;
+    }
+    
+    .cookie-config summary {
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 12px;
+      color: #666;
+      user-select: none;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .cookie-config summary::-webkit-details-marker { display: none; }
+    
+    .cookie-config summary::before {
+      content: '▸';
+      font-size: 10px;
+      transition: transform 0.2s;
+    }
+    
+    .cookie-config[open] summary::before {
+      transform: rotate(90deg);
+    }
+    
+    .cookie-config summary:hover { background: #f0f0f0; }
+    
+    .cookie-config-content {
+      padding: 12px;
+      border-top: 1px solid #e8e8e8;
+    }
+    
+    .cookie-config-content .form-row { margin-bottom: 0; }
+    
+    .hint {
+      font-size: 11px;
+      color: #999;
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+    
+    .hint code {
+      background: #fff;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-family: monospace;
+      font-size: 10px;
+      border: 1px solid #e0e0e0;
+    }
+    
     .form-row {
       display: flex;
       gap: 8px;
@@ -459,5 +542,14 @@ export class NetworkTestPage extends SunPanelPageElement {
       background: #333; border-color: #555; color: #fff; 
     }
     container[dark] .response { background: rgba(255,255,255,0.1); border-color: #555; }
+    container[dark] .cookie-config {
+      background: #2a2a2a;
+      border-color: #444;
+    }
+    container[dark] .cookie-config summary { color: #aaa; }
+    container[dark] .cookie-config summary:hover { background: #333; }
+    container[dark] .cookie-config-content { border-color: #444; }
+    container[dark] .hint { color: #777; }
+    container[dark] .hint code { background: #333; border-color: #555; }
   `;
 }

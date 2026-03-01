@@ -12,6 +12,7 @@ export default {
   version: '1.0.0',
   entry: 'main.js',
   icon: 'logo.png',
+  debug: true,
 
   // 应用信息 国际化配置
   appInfo: {
