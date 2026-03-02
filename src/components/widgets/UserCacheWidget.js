@@ -109,7 +109,7 @@ export class UserCacheWidget extends SunPanelWidgetElement {
   }
 
   _log(...params) {
-    console.log(`UserCacheWidget-ItemId-${this.spCtx.widgetInfo.id}:`, ...params);
+    console.log(`UserCacheWidget-ItemId-${this.spCtx.widgetInfo.widgetId}:`, ...params);
   }
 
   _showInfo() {

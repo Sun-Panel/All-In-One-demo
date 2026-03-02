@@ -61,7 +61,7 @@ export class CounterWidget extends SunPanelWidgetElement {
       const api = this._cacheScope === 'user'
         ? this.spCtx.api.localCache.user
         : this.spCtx.api.localCache.app;
-      console.log(this._cacheScope)
+      // console.log(this._cacheScope)
       const data = await api.get(cacheKey);
       if (data !== null && data !== undefined) {
         this._count = typeof data === 'object' ? data.count || 0 : data;
@@ -111,7 +111,6 @@ export class CounterWidget extends SunPanelWidgetElement {
   }
 
   render() {
-    console.log("我render了")
     const size = this.spCtx?.widgetInfo?.gridSize || '2x2';
 
     if (size === '1x1') return this._render1x1();
