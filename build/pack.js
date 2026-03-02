@@ -1,6 +1,6 @@
 /**
- * 打包脚本
- * 将构建产物打包成 .zip 组件包
+ * Pack script
+ * Package build output into .zip component package
  */
 
 import AdmZip from 'adm-zip';
@@ -48,9 +48,9 @@ function addDirectoryToZip(zip, dirPath, zipPath, excludedFiles = []) {
  * 打包函数
  */
 function pack() {
-  console.log('\n📦 开始打包...\n');
+  console.log('\n📦 Packing...\n');
 
-  // 重新生成 app.json，确保使用正确的版本
+  // Regenerate app.json to ensure correct version
   generateAppJson();
 
   const { microAppId, version } = JSON.parse(readFileSync(join(projectRoot, 'app.json'), 'utf-8'));
@@ -95,13 +95,13 @@ function pack() {
   // 写入 zip 文件
   zip.writeZip(zipPath);
 
-  console.log(`✅ 打包完成: ${zipPath}`);
-  console.log(`📦 包名: ${zipFileName}`);
-  console.log(`🔧 环境: ${isDev ? 'development' : 'production'}`);
+  console.log(`✅ Package created: ${zipPath}`);
+  console.log(`📦 Package: ${zipFileName}`);
+  console.log(`🔧 Environment: ${isDev ? 'development' : 'production'}`);
 
-  // 显示排除的文件
+  // Show excluded files
   if (excludedFiles.length > 0) {
-    console.log(`\n🗑️  已排除 ${excludedFiles.length} 个 .map 文件:`);
+    console.log(`\n🗑️  Excluded ${excludedFiles.length} .map files:`);
     excludedFiles.forEach((file) => console.log(`   - ${file}`));
   }
   console.log();

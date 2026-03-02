@@ -2,6 +2,7 @@
   "appJsonVersion": "1.0",
   "microAppId": "sun-panel-all-in-one-demo",
   "version": "1.0.0",
+  "apiVersion": "1.0.15",
   "author": "sun-panel",
   "entry": "main.js",
   "icon": "logo.png",
@@ -55,14 +56,6 @@
           "2x4"
         ],
         "background": "white",
-        "isModifyBackground": false
-      },
-      "network-widget": {
-        "configComponentName": null,
-        "size": [
-          "2x4"
-        ],
-        "background": "",
         "isModifyBackground": false
       },
       "window-manager-widget": {

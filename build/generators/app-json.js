@@ -7,6 +7,14 @@ import appConfig from '../../config/app.config.js';
 import { writeFileSync, readFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+
+// 获取 @sun-panel/micro-app 包的版本号
+const microAppEntryPath = require.resolve('@sun-panel/micro-app');
+const microAppRoot = dirname(dirname(microAppEntryPath)); // 从 dist/index.js 向上两级到包根目录
+const SP_API_VERSION = JSON.parse(readFileSync(join(microAppRoot, 'package.json'), 'utf-8')).version;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -58,6 +66,7 @@ function generateAppJson() {
     appJsonVersion: '1.0',
     microAppId: finalMicroId,
     version,
+    apiVersion: SP_API_VERSION,
     author,
     entry,
     icon,
@@ -101,11 +110,11 @@ function generateAppJson() {
   const outputPath = join(__dirname, '../../app.json');
   writeFileSync(outputPath, JSON.stringify(appJson, null, 2), 'utf-8');
 
-  console.log(`✅ app.json 已生成: ${outputPath}`);
-  console.log(`📦 应用: ${finalMicroId}`);
-  console.log(`🔧 环境: ${isDev ? 'development' : 'production'}`);
-  console.log(`📄 页面: ${Object.keys(componentsConfig.pages).join(', ')}`);
-  console.log(`🎨 小部件: ${Object.keys(componentsConfig.widgets).join(', ')}`);
+  console.log(`✅ app.json generated: ${outputPath}`);
+  console.log(`📦 App: ${finalMicroId}`);
+  console.log(`🔧 Environment: ${isDev ? 'development' : 'production'}`);
+  console.log(`📄 Pages: ${Object.keys(componentsConfig.pages).join(', ')}`);
+  console.log(`🎨 Widgets: ${Object.keys(componentsConfig.widgets).join(', ')}`);
 
   return appJson;
 }
